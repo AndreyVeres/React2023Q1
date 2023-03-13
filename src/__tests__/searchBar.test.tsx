@@ -2,27 +2,34 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import ProductsList from 'components/productsList/ProductsList';
+import { StorageMock } from '__mocks__/storage';
 
-describe('Search bar', () => {
-  it('search bar take value from locaStorage', () => {
-    localStorage.setItem('searchQuery', 'searchQuery');
+describe('localStorage', () => {
+  const storage = new StorageMock();
+  Object.defineProperty(window, 'localStorage', { value: storage });
+
+  it('get value if local storage not empty', () => {
+    storage.setItem('searchQuery', 'test');
+
     render(
       <BrowserRouter>
         <ProductsList />
       </BrowserRouter>
     );
+
     const input = screen.getByTestId('input');
-    expect(input).toHaveValue('searchQuery');
+    expect(input).toHaveValue('test');
   });
 
-  it('empty input if local storage clear', () => {
-    localStorage.clear();
+  it('if local storage clear', () => {
+    storage.clear();
 
     render(
       <BrowserRouter>
         <ProductsList />
       </BrowserRouter>
     );
+
     const input = screen.getByTestId('input');
     expect(input).toHaveValue('');
   });

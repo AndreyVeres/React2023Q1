@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import NotFoundPage from './NotFoundPage';
+import NotFoundPage from 'pages/notFound/NotFoundPage';
 
 describe('Not Found Page', () => {
   it('render not found page title ', () => {

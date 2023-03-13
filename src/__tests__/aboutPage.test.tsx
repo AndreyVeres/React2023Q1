@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import AboutPage from './AboutPage';
+import AboutPage from 'pages/about/AboutPage';
 
 describe('About Page', () => {
   it('render about page title ', () => {
