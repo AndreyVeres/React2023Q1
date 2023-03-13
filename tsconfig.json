@@ -21,6 +21,8 @@
   },
   "include": [
     "./src/**/*",
-    "styled.d.ts"
+    "styled.d.ts",
+    "setupTests.ts",
+    "__tests__",
   ]
 }
