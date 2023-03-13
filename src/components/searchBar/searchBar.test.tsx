@@ -1,8 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import SearchBar from './SearchBar';
-import userEvent from '@testing-library/user-event';
 import ProductsList from 'components/productsList/ProductsList';
 
 describe('Search bar', () => {
