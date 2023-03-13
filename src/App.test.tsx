@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter, MemoryRouter, Route, Routes } from 'react-router-dom';
-import App from '../App';
+import App from './App';
 import AboutPage from 'pages/about/AboutPage';
 import MainPage from 'pages/main/MainPage';
 import NotFoundPage from 'pages/notFound/NotFoundPage';
