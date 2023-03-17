@@ -1,10 +1,10 @@
 import React from 'react';
-import { API } from 'api/api';
 import ProductsItem from 'components/productsItem/ProductsItem';
 import SearchBar from 'components/searchBar/SearchBar';
 import { IProducts } from 'types/types';
 
 import './productsList.scss';
+import { cardsData } from '__mocks__/products';
 
 interface State {
   products: IProducts[];
@@ -13,14 +13,9 @@ interface State {
 
 export default class ProductsList extends React.Component {
   state: State = {
-    products: [],
+    products: cardsData,
     filterQuery: localStorage.getItem('searchQuery') || '',
   };
-
-  async componentDidMount(): Promise<void> {
-    const products = await API.getProducts(15);
-    this.setState({ ...this.state, products });
-  }
 
   searchHandler = (filterQuery: string): void => {
     this.setState({ ...this.state, filterQuery });

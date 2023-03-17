@@ -7,13 +7,10 @@ interface ISearchBarProps {
 }
 
 export default class SearchBar extends React.Component<ISearchBarProps> {
-  onChange(e: React.ChangeEvent<HTMLInputElement>): void {
-    const filterQuery = e.target.value;
+  onChange(e: React.FormEvent<HTMLInputElement>): void {
+    const filterQuery = e.currentTarget.value;
     this.props.searchHandler(filterQuery);
     localStorage.setItem('searchQuery', filterQuery);
-    this.setState({
-      filterQuery,
-    });
   }
 
   render(): React.ReactNode {
@@ -25,7 +22,7 @@ export default class SearchBar extends React.Component<ISearchBarProps> {
           type="search"
           placeholder="Search"
           value={filterQuery}
-          onChange={(e) => this.onChange(e)}
+          onInput={(e) => this.onChange(e)}
           data-testid="input"
         />
       </form>
