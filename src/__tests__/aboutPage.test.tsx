@@ -3,8 +3,8 @@ import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import AboutPage from 'pages/about/AboutPage';
 
-describe('About Page', () => {
-  it('render about page title ', () => {
+describe('about page', () => {
+  it('render about page ', () => {
     render(
       <BrowserRouter>
         <AboutPage />
