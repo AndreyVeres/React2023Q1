@@ -11,3 +11,7 @@ export interface IProducts {
   thumbnail: string;
   title: string;
 }
+
+export interface IFormValues {
+  [key: string]: string | undefined | null | boolean;
+}
