@@ -7,6 +7,7 @@ export default function NavBar() {
     <nav className="nav">
       <Link to={'/'}>HOME</Link>
       <Link to={'/about'}>ABOUT</Link>
+      <Link to={'/form'}> FORM </Link>
     </nav>
   );
 }
