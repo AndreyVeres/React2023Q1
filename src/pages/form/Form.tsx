@@ -35,7 +35,7 @@ export default class Form extends Component {
       agree: this.agreeRef.current?.checked,
       female: this.femaleRef.current?.checked,
       male: this.maleRef.current?.checked,
-      file: this.fileRef.current?.files?.item(0)?.name,
+      file: this.fileRef.current?.value,
     };
 
     const errors = validate(values);
@@ -126,7 +126,9 @@ export default class Form extends Component {
             {agreeMessage ? <p>{agreeMessage}</p> : null}
           </div>
 
-          <button type="submit">Submit</button>
+          <button data-testid="submit-button" type="submit">
+            Submit
+          </button>
         </form>
 
         <div className="cards">

@@ -5,19 +5,19 @@ export interface IUserInfo {
   surName: string;
   dob: string;
   country: string;
-  male?: string;
+  male?: boolean;
   file: string;
-  female?: string;
+  female?: boolean;
 }
 
-export default function FormCard({ name, surName, dob, country, male, file, female }: IUserInfo) {
+export default function FormCard({ name, surName, dob, country, male, file }: IUserInfo) {
   return (
     <div>
-      <h2>{`${name} ${surName}`}</h2>
-      <p>{dob}</p>
-      <p>{country}</p>
-      <p>{male || female || ''}</p>
-      <p>{file}</p>
+      <h2 data-testid="name">{`${name} ${surName}`}</h2>
+      <p data-testid="dob">{dob}</p>
+      <p data-testid="country">{country}</p>
+      <p data-testid="gender">{male ? 'male' : 'female'}</p>
+      <p data-testid="file">{file}</p>
     </div>
   );
 }
