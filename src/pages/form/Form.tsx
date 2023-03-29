@@ -19,16 +19,16 @@ export default class Form extends Component {
   femaleRef = createRef<HTMLInputElement>();
   fileRef = createRef<HTMLInputElement>();
   formRef = createRef<HTMLFormElement>();
-
+  filePath = '';
   state: State = {
     cards: [],
     errors: {},
   };
 
   submitHandler = (e: React.FormEvent<HTMLFormElement>): void => {
-    const valueFile = this.fileRef.current as { files: FileList };
-    const filePath = URL.createObjectURL(valueFile.files[0]);
     e.preventDefault();
+    const valueFile = this.fileRef.current as { files: FileList };
+    if (valueFile.files[0]) this.filePath = URL.createObjectURL(valueFile.files[0]);
     const values: IFormValues = {
       name: this.nameRef.current?.value,
       surName: this.surNameRef.current?.value,
@@ -37,11 +37,10 @@ export default class Form extends Component {
       agree: this.agreeRef.current?.checked,
       female: this.femaleRef.current?.checked,
       male: this.maleRef.current?.checked,
-      file: filePath,
+      file: this.filePath,
     };
 
     const errors = validate(values);
-
     if (!Object.keys(errors).length) {
       this.setState((prev) => ({ ...prev, cards: [...this.state.cards, values] }));
       this.formRef.current?.reset();
