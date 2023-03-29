@@ -17,7 +17,7 @@ export default function FormCard({ name, surName, dob, country, male, file }: IU
       <p data-testid="dob">{dob}</p>
       <p data-testid="country">{country}</p>
       <p data-testid="gender">{male ? 'male' : 'female'}</p>
-      <p data-testid="file">{file}</p>
+      <img src={file} alt="image" />
     </div>
   );
 }

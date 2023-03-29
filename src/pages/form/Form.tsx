@@ -26,6 +26,8 @@ export default class Form extends Component {
   };
 
   submitHandler = (e: React.FormEvent<HTMLFormElement>): void => {
+    const valueFile = this.fileRef.current as { files: FileList };
+    const filePath = URL.createObjectURL(valueFile.files[0]);
     e.preventDefault();
     const values: IFormValues = {
       name: this.nameRef.current?.value,
@@ -35,7 +37,7 @@ export default class Form extends Component {
       agree: this.agreeRef.current?.checked,
       female: this.femaleRef.current?.checked,
       male: this.maleRef.current?.checked,
-      file: this.fileRef.current?.value,
+      file: filePath,
     };
 
     const errors = validate(values);

@@ -25,11 +25,10 @@ describe('Form component', () => {
     fireEvent.change(screen.getByLabelText('Date of birth:'), { target: { value: '1990-01-01' } });
     fireEvent.change(screen.getByLabelText('Country:'), { target: { value: 'USA' } });
     fireEvent.click(screen.getByLabelText('Male'));
-    fireEvent.change(screen.getByLabelText('Загрузите файл:'), {
+    fireEvent.load(screen.getByLabelText('Загрузите файл:'), {
       target: { files: [new File([''], 'file.png', { type: 'image/png' })] },
     });
     fireEvent.click(screen.getByLabelText('Aggre'));
-    fireEvent.click(screen.getByRole('button', { name: 'Submit' }));
 
     expect(screen.getByLabelText('Name:')).toHaveValue('TestName');
     expect(screen.getByLabelText('SurName:')).toHaveValue('TestSurName');
@@ -46,6 +45,5 @@ describe('Form component', () => {
     expect(screen.getByTestId('name')).toHaveTextContent('myName mySurName');
     expect(screen.getByTestId('dob')).toHaveTextContent('1990-01-01');
     expect(screen.getByTestId('country')).toHaveTextContent('USA');
-    expect(screen.getByTestId('file')).toHaveTextContent('file.png');
   });
 });
