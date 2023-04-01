@@ -24,7 +24,7 @@ describe('App', () => {
       </BrowserRouter>
     );
 
-    const input = screen.getByRole('search');
+    const input = screen.getByTestId('search');
     expect(input).toBeInTheDocument();
   });
 });

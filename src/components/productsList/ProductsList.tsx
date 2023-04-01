@@ -1,43 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductsItem from 'components/productsItem/ProductsItem';
-import SearchBar from 'components/searchBar/SearchBar';
 import { IProducts } from 'types/types';
 
 import './productsList.scss';
 import { cardsData } from '__mocks__/products';
 
-interface State {
-  products: IProducts[];
-  filterQuery: string;
-}
+export default function ProductsList() {
+  const [products, setProducts] = useState<IProducts[]>(cardsData);
+  const [inputValue, setInputValue] = useState<string>('');
 
-export default class ProductsList extends React.Component {
-  state: State = {
-    products: cardsData,
-    filterQuery: localStorage.getItem('searchQuery') || '',
+  const searchHandler = (e: React.FormEvent<HTMLInputElement>): void => {
+    const value = e.currentTarget.value;
+    setInputValue(() => value);
+
+    setProducts(
+      cardsData.filter((product) =>
+        product.title.toLowerCase().includes(e.currentTarget.value.toLowerCase())
+      )
+    );
   };
 
-  searchHandler = (filterQuery: string): void => {
-    this.setState({ ...this.state, filterQuery });
-  };
+  useEffect(() => {
+    const value = localStorage.getItem('searchQuery');
+    if (value) setInputValue(value);
+  }, []);
 
-  render(): React.ReactNode {
-    const { products, filterQuery } = this.state;
-    const filteredProduts = products.filter((p) =>
-      p.title.toLowerCase().includes(filterQuery.toLowerCase())
-    );
-
-    return (
-      <>
-        <SearchBar filterQuery={filterQuery} searchHandler={this.searchHandler} />
-        <ul className="products__list">
-          {filteredProduts.length > 0 ? (
-            filteredProduts.map((product) => <ProductsItem {...product} key={product.id} />)
-          ) : (
-            <h3>Products not found</h3>
-          )}
-        </ul>
-      </>
-    );
-  }
+  useEffect(() => {
+    return () => {
+      localStorage.setItem('searchQuery', inputValue);
+    };
+  }, [inputValue]);
+  return (
+    <>
+      <input data-testid="search" value={inputValue} onChange={(e) => searchHandler(e)} />
+      <ul className="products__list">
+        {products.length > 0 ? (
+          products.map((product) => <ProductsItem {...product} key={product.id} />)
+        ) : (
+          <h3>Products not found</h3>
+        )}
+      </ul>
+    </>
+  );
 }
