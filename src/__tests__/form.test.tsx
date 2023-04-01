@@ -1,14 +1,15 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import Form from 'pages/form/Form';
 import { mockUserData } from '__mocks__/userData';
 import FormCard from 'pages/form/FormCard';
+import userEvent from '@testing-library/user-event';
 
 describe('Form component', () => {
   it('should render all form fields correctly', () => {
     render(<Form />);
     expect(screen.getByLabelText('Name:')).toBeInTheDocument();
-    expect(screen.getByLabelText('SurName:')).toBeInTheDocument();
+    expect(screen.getByText('SurName:')).toBeInTheDocument();
     expect(screen.getByLabelText('Date of birth:')).toBeInTheDocument();
     expect(screen.getByLabelText('Country:')).toBeInTheDocument();
     expect(screen.getByText('Male')).toBeInTheDocument();
@@ -45,5 +46,34 @@ describe('Form component', () => {
     expect(screen.getByTestId('name')).toHaveTextContent('myName mySurName');
     expect(screen.getByTestId('dob')).toHaveTextContent('1990-01-01');
     expect(screen.getByTestId('country')).toHaveTextContent('USA');
+  });
+
+  it('displays error message when name field has incorrect format', async () => {
+    render(<Form />);
+
+    const nameInput = screen.getByLabelText('Name:');
+
+    userEvent.type(nameInput, 'abc');
+
+    userEvent.click(screen.getByTestId('submit-button'));
+
+    expect(
+      await screen.findByText('start with a capital letter and be at least 3 characters long')
+    ).toBeInTheDocument();
+  });
+
+  it('displays error message if surName input is not capitalized on submit', async () => {
+    render(<Form />);
+    const surNameInput = screen.getByLabelText('SurName:');
+    userEvent.type(surNameInput, 'doe');
+    const submitButton = screen.getByTestId('submit-button');
+    fireEvent.click(submitButton);
+    await waitFor(() =>
+      expect(
+        screen.getByText('start with a capital letter and be at least 3 characters long', {
+          selector: 'p',
+        })
+      ).toBeInTheDocument()
+    );
   });
 });

@@ -1,143 +1,161 @@
-import React, { Component, createRef } from 'react';
-import { IFormValues } from 'types/types';
-import { IErrors, validate } from 'utils/validate';
-import './form.scss';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import FormCard, { IUserInfo } from './FormCard';
 
-interface State {
-  cards: IUserInfo[];
-  errors: IErrors;
-}
+import './form.scss';
+import { dateNotFuture } from 'utils/dateValidate';
 
-export default class Form extends Component {
-  nameRef = createRef<HTMLInputElement>();
-  surNameRef = createRef<HTMLInputElement>();
-  dobRef = createRef<HTMLInputElement>();
-  countryRef = createRef<HTMLSelectElement>();
-  agreeRef = createRef<HTMLInputElement>();
-  maleRef = createRef<HTMLInputElement>();
-  femaleRef = createRef<HTMLInputElement>();
-  fileRef = createRef<HTMLInputElement>();
-  formRef = createRef<HTMLFormElement>();
-  filePath = '';
-  state: State = {
-    cards: [],
-    errors: {},
+type FormValues = {
+  name: string;
+  surName: string;
+  dob: string;
+  agree: boolean;
+  file: File;
+  country: string;
+  gender: string;
+};
+
+export default function Form() {
+  const [cards, setCards] = useState<IUserInfo[]>([]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
+
+  const onSubmit = (data: FormValues) => {
+    setCards((prev) => [
+      ...prev,
+      { ...data, file: URL.createObjectURL(Object.values(data.file)[0]) },
+    ]);
   };
 
-  submitHandler = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    const valueFile = this.fileRef.current as { files: FileList };
-    if (valueFile.files[0]) this.filePath = URL.createObjectURL(valueFile.files[0]);
-    const values: IFormValues = {
-      name: this.nameRef.current?.value,
-      surName: this.surNameRef.current?.value,
-      dob: this.dobRef.current?.value,
-      country: this.countryRef.current?.value,
-      agree: this.agreeRef.current?.checked,
-      female: this.femaleRef.current?.checked,
-      male: this.maleRef.current?.checked,
-      file: this.filePath,
-    };
-
-    const errors = validate(values);
-    if (!Object.keys(errors).length) {
-      this.setState((prev) => ({ ...prev, cards: [...this.state.cards, values] }));
-      this.formRef.current?.reset();
-    }
-    this.setState((prev) => ({ ...prev, errors }));
-  };
-
-  render() {
-    const {
-      nameRef,
-      surNameRef,
-      dobRef,
-      countryRef,
-      agreeRef,
-      maleRef,
-      femaleRef,
-      fileRef,
-      formRef,
-    } = this;
-
-    const {
-      nameMessage,
-      surNameMessage,
-      dobMessage,
-      countryMessage,
-      genderMessage,
-      fileMessage,
-      agreeMessage,
-    } = this.state.errors;
-
-    return (
-      <>
-        <form ref={formRef} onSubmit={(e) => this.submitHandler(e)} className="form">
-          <div className="form__item">
-            <label htmlFor="name">Name:</label>
-            <input ref={nameRef} type="text" id="name" name="name" />
-            {nameMessage ? <p>{nameMessage}</p> : null}
-          </div>
-
-          <div className="form__item">
-            <label htmlFor="surname">SurName:</label>
-            <input ref={surNameRef} type="text" id="surname" name="surname" />
-            {surNameMessage ? <p>{surNameMessage}</p> : null}
-          </div>
-
-          <div className="form__item">
-            <label htmlFor="dob">Date of birth:</label>
-            <input ref={dobRef} type="date" id="dob" name="dob" />
-            {dobMessage ? <p>{dobMessage}</p> : null}
-          </div>
-
-          <div className="form__item">
-            <label htmlFor="country">Country:</label>
-            <select ref={countryRef} id="country" name="country">
-              <option value="Russia">Russia</option>
-              <option value="USA">USA</option>
-              <option value="UK">UK</option>
-            </select>
-            {countryMessage ? <p>{countryMessage}</p> : null}
-          </div>
-
-          <div className="form__item">
-            <label>Выберите пол:</label>
-            <div>
-              <input ref={maleRef} type="radio" id="male" name="gender" value="male" />
-              <label htmlFor="male">Male</label>
-            </div>
-            <div>
-              <input ref={femaleRef} type="radio" id="female" name="gender" value="female" />
-              <label htmlFor="female">Female</label>
-            </div>
-            {genderMessage ? <p>{genderMessage}</p> : null}
-          </div>
-
-          <div className="form__item">
-            <label htmlFor="file">Загрузите файл:</label>
-            <input ref={fileRef} type="file" id="file" name="file" />
-            {fileMessage ? <p>{fileMessage}</p> : null}
-          </div>
-
-          <div className="form__item">
-            <label htmlFor="agree">Aggre</label>
-            <input ref={agreeRef} type="checkbox" id="agree" name="agree" />
-            {agreeMessage ? <p>{agreeMessage}</p> : null}
-          </div>
-
-          <button data-testid="submit-button" type="submit">
-            Submit
-          </button>
-        </form>
-
-        <div className="cards">
-          {this.state.cards.map((card, index) => (
-            <FormCard {...card} key={index} />
-          ))}
+  return (
+    <>
+      <form className="form" onSubmit={handleSubmit(onSubmit)}>
+        <div className="form__item">
+          <label htmlFor="name">Name:</label>
+          <input
+            {...register('name', {
+              required: 'required field',
+              pattern: {
+                value: /^[A-Z][a-z]{2,}$/,
+                message: 'start with a capital letter and be at least 3 characters long',
+              },
+            })}
+            type="text"
+            id="name"
+            name="name"
+          />
+          {errors.name && <p>{errors.name.message}</p>}
         </div>
-      </>
-    );
-  }
+
+        <div className="form__item">
+          <label htmlFor="surName">SurName:</label>
+          <input
+            {...register('surName', {
+              required: 'required field',
+              pattern: {
+                value: /^[A-Z][a-z]{2,}$/,
+                message: 'start with a capital letter and be at least 3 characters long',
+              },
+            })}
+            type="text"
+            id="surName"
+            name="surName"
+          />
+          {errors.surName && <p>{errors.surName.message}</p>}
+        </div>
+
+        <div className="form__item">
+          <label htmlFor="country">Country:</label>
+          <select {...register('country', { required: true })} id="country" name="country">
+            <option value="Russia">Russia</option>
+            <option value="USA">USA</option>
+            <option value="UK">UK</option>
+          </select>
+          {errors.country ? <p>{errors.country.message}</p> : null}
+        </div>
+
+        <div className="form__item">
+          <label htmlFor="dob">Date of birth:</label>
+          <input
+            {...register('dob', {
+              required: 'required field',
+              validate: { dateNotFuture },
+            })}
+            type="date"
+            id="dob"
+            name="dob"
+          />
+          {errors.dob && <p>{errors.dob.message}</p>}
+        </div>
+
+        <div className="form__item">
+          <label htmlFor="file">Загрузите файл:</label>
+          <input
+            data-testid="file-input"
+            {...register('file', {
+              required: {
+                value: true,
+                message: 'file is required',
+              },
+            })}
+            type="file"
+            id="file"
+            name="file"
+          />
+          {errors.file && <p>{errors.file.message}</p>}
+        </div>
+
+        <div className="form__item">
+          <label>Выберите пол:</label>
+          <div>
+            <input
+              {...register('gender', { required: { value: true, message: 'choose one gender' } })}
+              type="radio"
+              id="male"
+              name="gender"
+              value="male"
+            />
+            <label htmlFor="male">Male</label>
+          </div>
+          <div>
+            <input
+              {...register('gender', { required: { value: true, message: 'choose one gender' } })}
+              type="radio"
+              id="female"
+              name="gender"
+              value="female"
+            />
+            <label htmlFor="female">Female</label>
+          </div>
+          {errors.gender && <p>{errors.gender.message}</p>}
+        </div>
+
+        <div className="form__item">
+          <label htmlFor="agree">Aggre</label>
+          <input
+            {...register('agree', {
+              required: { value: true, message: 'you must agree to everything' },
+            })}
+            type="checkbox"
+            id="agree"
+            name="agree"
+          />
+          {errors.agree?.message && <p>{errors.agree.message}</p>}
+        </div>
+
+        <button data-testid="submit-button" type="submit">
+          Submit
+        </button>
+      </form>
+
+      <div className="cards">
+        {cards.map((card, index) => (
+          <FormCard {...card} key={index} />
+        ))}
+      </div>
+    </>
+  );
 }

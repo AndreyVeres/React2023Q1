@@ -17,7 +17,7 @@ describe('localStorage', () => {
       </BrowserRouter>
     );
 
-    const input = screen.getByTestId('input');
+    const input = screen.getByTestId('search');
     expect(input).toHaveValue('test');
   });
 
@@ -30,7 +30,7 @@ describe('localStorage', () => {
       </BrowserRouter>
     );
 
-    const input = screen.getByTestId('input');
+    const input = screen.getByTestId('search');
     expect(input).toHaveValue('');
   });
 });
