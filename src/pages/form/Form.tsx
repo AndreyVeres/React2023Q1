@@ -21,13 +21,14 @@ export default function Form() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormValues>();
 
   const onSubmit = (data: FormValues) => {
-    setCards((prev) => [
-      ...prev,
-      { ...data, file: URL.createObjectURL(Object.values(data.file)[0]) },
-    ]);
+    const file = Object.values(data.file)[0];
+    setCards((prev) => [...prev, { ...data, file: URL.createObjectURL(file) }]);
+
+    reset();
   };
 
   return (

@@ -5,6 +5,6 @@ export const mockUserData: IUserInfo = {
   surName: 'mySurName',
   dob: '1990-01-01',
   country: 'USA',
-  female: true,
+  gender: 'male',
   file: 'file.png',
 };
