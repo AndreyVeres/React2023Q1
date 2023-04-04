@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ProductsItem from 'components/productsItem/ProductsItem';
 import { IProducts } from 'types/types';
 
@@ -8,7 +8,7 @@ import { cardsData } from '__mocks__/products';
 export default function ProductsList() {
   const [products, setProducts] = useState<IProducts[]>(cardsData);
   const [inputValue, setInputValue] = useState<string>('');
-
+  const currentValue = useRef<string>();
   const searchHandler = (e: React.FormEvent<HTMLInputElement>): void => {
     const value = e.currentTarget.value;
     setInputValue(() => value);
@@ -21,15 +21,17 @@ export default function ProductsList() {
   };
 
   useEffect(() => {
-    const value = localStorage.getItem('searchQuery');
-    if (value) setInputValue(value);
-  }, []);
+    currentValue.current = inputValue;
+  }, [inputValue]);
 
   useEffect(() => {
+    const value = localStorage.getItem('searchQuery');
+    if (value) setInputValue(value);
+
     return () => {
-      localStorage.setItem('searchQuery', inputValue);
+      if (currentValue.current) localStorage.setItem('searchQuery', currentValue.current);
     };
-  }, [inputValue]);
+  }, []);
   return (
     <>
       <input data-testid="search" value={inputValue} onChange={(e) => searchHandler(e)} />
