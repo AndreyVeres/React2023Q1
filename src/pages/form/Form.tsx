@@ -17,6 +17,7 @@ type FormValues = {
 
 export default function Form() {
   const [cards, setCards] = useState<IUserInfo[]>([]);
+  const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const {
     register,
     handleSubmit,
@@ -27,7 +28,7 @@ export default function Form() {
   const onSubmit = (data: FormValues) => {
     const file = Object.values(data.file)[0];
     setCards((prev) => [...prev, { ...data, file: URL.createObjectURL(file) }]);
-
+    setIsSubmitted(true);
     reset();
   };
 
@@ -151,6 +152,11 @@ export default function Form() {
           Submit
         </button>
       </form>
+      {isSubmitted && (
+        <div onClick={() => setIsSubmitted(false)} className="popup">
+          <h2>Card created</h2>
+        </div>
+      )}
 
       <div className="cards">
         {cards.map((card, index) => (
