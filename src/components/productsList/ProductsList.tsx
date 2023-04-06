@@ -1,47 +1,42 @@
-import React, { useEffect, useRef, useState } from 'react';
-import ProductsItem from 'components/productsItem/ProductsItem';
-import { IProducts } from 'types/types';
+import React from 'react';
+import { Filter, FilterValues } from 'components/filter/Filter';
+import { CardThumbnail } from 'components/Card/cardThumbnail/CardThumbnail';
+import useFetch from 'hooks/useFetch';
+import { Spinner } from 'components/UI/spinner/Spinner';
 
-import './productsList.scss';
-import { cardsData } from '__mocks__/products';
+import styles from './productsList.module.scss';
 
-export default function ProductsList() {
-  const [products, setProducts] = useState<IProducts[]>(cardsData);
-  const [inputValue, setInputValue] = useState<string>('');
-  const currentValue = useRef<string>();
-  const searchHandler = (e: React.FormEvent<HTMLInputElement>): void => {
-    const value = e.currentTarget.value;
-    setInputValue(() => value);
+export function ProductsList() {
+  const { data, loading, error, totalCount, getData } = useFetch();
 
-    setProducts(
-      cardsData.filter((product) =>
-        product.title.toLowerCase().includes(e.currentTarget.value.toLowerCase())
-      )
+  const searchHandler = async ({ searchQuery, pageSize }: FilterValues): Promise<void> => {
+    getData(
+      `https://api.magicthegathering.io/v1/cards?page=1&pageSize=${pageSize}&name=${searchQuery}&contains=imageUrl`
     );
   };
 
-  useEffect(() => {
-    currentValue.current = inputValue;
-  }, [inputValue]);
-
-  useEffect(() => {
-    const value = localStorage.getItem('searchQuery');
-    if (value) setInputValue(value);
-
-    return () => {
-      if (currentValue.current) localStorage.setItem('searchQuery', currentValue.current);
-    };
-  }, []);
   return (
     <>
-      <input data-testid="search" value={inputValue} onChange={(e) => searchHandler(e)} />
-      <ul className="products__list">
-        {products.length > 0 ? (
-          products.map((product) => <ProductsItem {...product} key={product.id} />)
-        ) : (
-          <h3>Products not found</h3>
-        )}
-      </ul>
+      <Filter searchHandler={searchHandler} />
+      <h2 className={styles.total}>Всего результатов:{totalCount}</h2>
+      {loading ? (
+        <Spinner />
+      ) : error ? (
+        <div>
+          Произошла ошибка. Иногда апишка ведет себя очень странно или вообще лежит, попробуйте
+          обновить страницу или попробуйте позже
+        </div>
+      ) : data?.length ? (
+        <>
+          <ul className={styles.cards}>
+            {data?.map((card) => (
+              <CardThumbnail key={card.id} {...card} />
+            ))}
+          </ul>
+        </>
+      ) : (
+        <div>not found cards</div>
+      )}
     </>
   );
 }
