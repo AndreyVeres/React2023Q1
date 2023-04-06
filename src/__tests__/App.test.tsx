@@ -1,15 +1,10 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import App from '../App';
+import { App } from '../App';
 
 describe('App', () => {
   it('render navigation links', () => {
-    render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    );
+    render(<App />);
     const aboutLink = screen.getByText(/about/i);
     const homeLink = screen.getByText(/home/i);
 
@@ -18,11 +13,7 @@ describe('App', () => {
   });
 
   it('render search input', () => {
-    render(
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    );
+    render(<App />);
 
     const input = screen.getByTestId('search');
     expect(input).toBeInTheDocument();

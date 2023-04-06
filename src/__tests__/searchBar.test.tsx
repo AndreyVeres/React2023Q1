@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent, screen } from '@testing-library/react';
 
 import { StorageMock } from '__mocks__/storage';
-import ProductsList from 'components/productsList/ProductsList';
+import { ProductsList } from 'components/productsList/ProductsList';
 
 describe('SearchBar', () => {
   const storage = new StorageMock();

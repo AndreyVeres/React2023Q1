@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import ProductsList from 'components/productsList/ProductsList';
+import { ProductsList } from 'components/productsList/ProductsList';
 import { StorageMock } from '__mocks__/storage';
 
 describe('localStorage', () => {
