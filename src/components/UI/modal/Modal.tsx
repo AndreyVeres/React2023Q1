@@ -12,7 +12,7 @@ export function Modal({ isOpen, children, setIsOpen }: IModalProps) {
   return (
     <>
       {isOpen && (
-        <div onClick={() => setIsOpen(false)} className={styles.background}>
+        <div role={'dialog'} onClick={() => setIsOpen(false)} className={styles.background}>
           <div onClick={(e) => e.stopPropagation()}>{children}</div>
         </div>
       )}
