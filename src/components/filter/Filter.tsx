@@ -5,7 +5,8 @@ import { useForm } from 'react-hook-form';
 import styles from './filter.module.scss';
 
 interface IFilterProps {
-  searchHandler: (params: FilterValues) => void;
+  filters: FilterValues;
+  setFilters: React.Dispatch<React.SetStateAction<FilterValues>>;
 }
 
 export type FilterValues = {
@@ -13,13 +14,13 @@ export type FilterValues = {
   pageSize: number;
 };
 
-export function Filter({ searchHandler }: IFilterProps) {
-  const searchInput = useInput(localStorage.getItem('searchQuery') || '');
+export function Filter({ filters, setFilters }: IFilterProps) {
+  const searchInput = useInput(filters.searchQuery);
   const currentValue = useRef<string>();
   const { register, handleSubmit } = useForm<FilterValues>();
 
   const onSearch = (filters: FilterValues) => {
-    searchHandler(filters);
+    setFilters(filters);
   };
 
   useEffect(() => {
@@ -27,8 +28,6 @@ export function Filter({ searchHandler }: IFilterProps) {
   }, [searchInput.value]);
 
   useEffect(() => {
-    onSearch({ searchQuery: searchInput.value, pageSize: 10 });
-
     return () => {
       if (currentValue.current !== undefined)
         localStorage.setItem('searchQuery', currentValue.current);

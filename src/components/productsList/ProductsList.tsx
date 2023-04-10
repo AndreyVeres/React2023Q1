@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Filter, FilterValues } from 'components/filter/Filter';
 import { CardThumbnail } from 'components/Card/cardThumbnail/CardThumbnail';
 import useFetch from 'hooks/useFetch';
@@ -7,17 +7,15 @@ import { Spinner } from 'components/UI/spinner/Spinner';
 import styles from './productsList.module.scss';
 
 export function ProductsList() {
-  const { data, loading, error, totalCount, getData } = useFetch();
-
-  const searchHandler = async ({ searchQuery, pageSize }: FilterValues): Promise<void> => {
-    getData(
-      `https://api.magicthegathering.io/v1/cards?page=1&pageSize=${pageSize}&name=${searchQuery}&contains=imageUrl`
-    );
-  };
+  const [filters, setFilters] = useState<FilterValues>({
+    searchQuery: localStorage.getItem('searchQuery') || '',
+    pageSize: 10,
+  });
+  const { data, loading, error, totalCount } = useFetch(filters);
 
   return (
     <>
-      <Filter searchHandler={searchHandler} />
+      <Filter filters={filters} setFilters={setFilters} />
       <h2 className={styles.total}>Всего результатов:{totalCount}</h2>
       {loading ? (
         <Spinner />
