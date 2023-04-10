@@ -27,6 +27,8 @@ export function Filter({ searchHandler }: IFilterProps) {
   }, [searchInput.value]);
 
   useEffect(() => {
+    onSearch({ searchQuery: searchInput.value, pageSize: 10 });
+
     return () => {
       if (currentValue.current !== undefined)
         localStorage.setItem('searchQuery', currentValue.current);
