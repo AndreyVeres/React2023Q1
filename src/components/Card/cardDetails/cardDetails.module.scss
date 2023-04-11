@@ -1,0 +1,42 @@
+.cardDetails {
+  display: flex;
+  max-width: 700px;
+  gap: 10px;
+
+  .cardInfo {
+    padding: 0 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 1px 1px 10px #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  img {
+    border-radius: 10px;
+    box-shadow: 1px 1px 10px #fff;
+  }
+
+  .iconsBox {
+    display: flex;
+    gap: 5px;
+    padding: 3px 0;
+  }
+
+  .border {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .flavor {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin: auto 0 10px 0;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
