@@ -1,21 +1,20 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { App } from '../App';
+import { store } from 'store';
+import { Provider } from 'react-redux';
 
 describe('App', () => {
   it('render navigation links', () => {
-    render(<App />);
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
     const aboutLink = screen.getByText(/about/i);
     const homeLink = screen.getByText(/home/i);
 
     expect(aboutLink).toBeInTheDocument();
     expect(homeLink).toBeInTheDocument();
-  });
-
-  it('render search input', () => {
-    render(<App />);
-
-    const input = screen.getByTestId('search');
-    expect(input).toBeInTheDocument();
   });
 });

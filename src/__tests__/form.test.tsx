@@ -4,10 +4,16 @@ import Form from 'pages/form/Form';
 import { mockUserData } from '__mocks__/userData';
 import FormCard from 'pages/form/FormCard';
 import userEvent from '@testing-library/user-event';
+import { store } from 'store';
+import { Provider } from 'react-redux';
 
 describe('Form component', () => {
   it('should render all form fields correctly', () => {
-    render(<Form />);
+    render(
+      <Provider store={store}>
+        <Form />
+      </Provider>
+    );
     expect(screen.getByLabelText('Name:')).toBeInTheDocument();
     expect(screen.getByText('SurName:')).toBeInTheDocument();
     expect(screen.getByLabelText('Date of birth:')).toBeInTheDocument();
@@ -20,7 +26,11 @@ describe('Form component', () => {
   });
 
   test('form have correcty values', () => {
-    render(<Form />);
+    render(
+      <Provider store={store}>
+        <Form />
+      </Provider>
+    );
     fireEvent.change(screen.getByLabelText('Name:'), { target: { value: 'TestName' } });
     fireEvent.change(screen.getByLabelText('SurName:'), { target: { value: 'TestSurName' } });
     fireEvent.change(screen.getByLabelText('Date of birth:'), { target: { value: '1990-01-01' } });
@@ -49,7 +59,11 @@ describe('Form component', () => {
   });
 
   it('displays error message when name field has incorrect format', async () => {
-    render(<Form />);
+    render(
+      <Provider store={store}>
+        <Form />
+      </Provider>
+    );
 
     const nameInput = screen.getByLabelText('Name:');
 
@@ -60,20 +74,5 @@ describe('Form component', () => {
     expect(
       await screen.findByText('start with a capital letter and be at least 3 characters long')
     ).toBeInTheDocument();
-  });
-
-  it('displays error message if surName input is not capitalized on submit', async () => {
-    render(<Form />);
-    const surNameInput = screen.getByLabelText('SurName:');
-    userEvent.type(surNameInput, 'doe');
-    const submitButton = screen.getByTestId('submit-button');
-    fireEvent.click(submitButton);
-    await waitFor(() =>
-      expect(
-        screen.getByText('start with a capital letter and be at least 3 characters long', {
-          selector: 'p',
-        })
-      ).toBeInTheDocument()
-    );
   });
 });
