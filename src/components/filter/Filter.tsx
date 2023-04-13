@@ -1,54 +1,44 @@
-import React, { useEffect, useRef } from 'react';
-import { useInput } from 'hooks/useInput';
-import { useForm } from 'react-hook-form';
+import React from 'react';
 
+import { useActions, useAppStore } from 'hooks/useRedux';
 import styles from './filter.module.scss';
+import { IFilterState } from 'store/filterReducer/filterReducer';
 
 interface IFilterProps {
-  filters: FilterValues;
-  setFilters: React.Dispatch<React.SetStateAction<FilterValues>>;
+  searchHandler: (params: IFilterState) => void;
 }
 
-export type FilterValues = {
-  searchQuery: string;
-  pageSize: number;
-};
-
-export function Filter({ filters, setFilters }: IFilterProps) {
-  const searchInput = useInput(filters.searchQuery);
-  const currentValue = useRef<string>();
-  const { register, handleSubmit } = useForm<FilterValues>();
-
-  const onSearch = (filters: FilterValues) => {
-    setFilters(filters);
-  };
-
-  useEffect(() => {
-    currentValue.current = searchInput.value;
-  }, [searchInput.value]);
-
-  useEffect(() => {
-    return () => {
-      if (currentValue.current !== undefined)
-        localStorage.setItem('searchQuery', currentValue.current);
-    };
-  }, []);
+export function Filter({ searchHandler }: IFilterProps) {
+  const { name, pageSize } = useAppStore();
+  const { setQuery, setPageSize } = useActions();
 
   return (
-    <form className={styles.filter} role="search" onSubmit={handleSubmit(onSearch)}>
+    <form
+      className={styles.filter}
+      role="search"
+      onSubmit={(e) => {
+        e.preventDefault();
+        searchHandler({ name, pageSize });
+      }}
+    >
       <div className={styles.item}>
         <label htmlFor="searchQuery">Card name</label>
         <input
           id="searchQuery"
-          {...searchInput}
-          {...register('searchQuery')}
+          value={name}
+          onInput={(e) => setQuery(e.currentTarget.value)}
           data-testid="search"
         />
       </div>
 
       <div className={styles.item}>
         <label htmlFor="pageLimit">page size</label>
-        <select {...register('pageSize')} name="pageSize" id="pageSize">
+        <select
+          defaultValue={pageSize}
+          onInput={(e) => setPageSize(+e.currentTarget.value)}
+          name="pageSize"
+          id="pageSize"
+        >
           <option defaultChecked value={10}>
             10
           </option>

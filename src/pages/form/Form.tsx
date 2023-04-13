@@ -4,6 +4,7 @@ import FormCard, { IUserInfo } from './FormCard';
 
 import './form.scss';
 import { dateNotFuture } from 'utils/dateValidate';
+import { useActions, useAppStore } from 'hooks/useRedux';
 
 type FormValues = {
   name: string;
@@ -16,7 +17,8 @@ type FormValues = {
 };
 
 export default function Form() {
-  const [cards, setCards] = useState<IUserInfo[]>([]);
+  const { userCards } = useAppStore();
+  const { addCard } = useActions();
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
   const {
     register,
@@ -27,14 +29,15 @@ export default function Form() {
 
   const onSubmit = (data: FormValues) => {
     const file = Object.values(data.file)[0];
-    setCards((prev) => [...prev, { ...data, file: URL.createObjectURL(file) }]);
+    const newCard = { ...data, file: URL.createObjectURL(file) };
+    addCard(newCard);
     setIsSubmitted(true);
     reset();
   };
 
   return (
     <>
-      <form className="form" onSubmit={handleSubmit(onSubmit)}>
+      <form data-testid="user-form" className="form" onSubmit={handleSubmit(onSubmit)}>
         <div className="form__item">
           <label htmlFor="name">Name:</label>
           <input
@@ -159,7 +162,7 @@ export default function Form() {
       )}
 
       <div className="cards">
-        {cards.map((card, index) => (
+        {userCards.map((card, index) => (
           <FormCard {...card} key={index} />
         ))}
       </div>

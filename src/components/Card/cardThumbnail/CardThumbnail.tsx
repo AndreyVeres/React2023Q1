@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Modal, CardDetails } from 'components';
-import { ICard } from 'types/types';
+import React, { Suspense, useState } from 'react';
+import { Modal, CardDetails, Spinner } from 'components';
+import { ICard } from 'models/card';
 
 import styles from './cardThumbnail.module.scss';
 
@@ -15,12 +15,14 @@ export function CardThumbnail(card: ICard) {
       </Modal>
 
       <li className={styles.card}>
-        <img
-          onClick={() => setShowModal(true)}
-          className={styles.img}
-          src={imageUrl}
-          alt={'image not found'}
-        />
+        <Suspense fallback={<Spinner />}>
+          <img
+            onClick={() => setShowModal(true)}
+            className={styles.img}
+            src={imageUrl}
+            alt={'image not found'}
+          />
+        </Suspense>
         <h3>{name}</h3>
         <p>{type}</p>
         <p>{flavor}</p>

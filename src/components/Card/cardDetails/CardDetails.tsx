@@ -1,5 +1,5 @@
 import React from 'react';
-import { ICard } from 'types/types';
+import { ICard } from 'models/card';
 import { getManaIcons, replaceText } from 'utils/getManaIcons';
 
 import styles from './cardDetails.module.scss';
@@ -21,7 +21,7 @@ export function CardDetails({
       <div key={id + originalText} className={styles.cardDetails}>
         <img className={styles.img} src={imageUrl} alt="image" />
         <div className={styles.cardInfo}>
-          <h2 data-testId="name" className={styles.border}>
+          <h2 data-testd="name" className={styles.border}>
             {name}
           </h2>
           <div className={styles.border}>{getManaIcons(manaCost || '')}</div>
