@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import Form from 'pages/form/Form';
 import { mockUserData } from '__mocks__/userData';
 import FormCard from 'pages/form/FormCard';
