@@ -1,4 +1,4 @@
-import React, { Suspense, useState } from 'react';
+import React, { useState } from 'react';
 import { Filter } from 'components/filter/Filter';
 import { CardThumbnail } from 'components/Card/cardThumbnail/CardThumbnail';
 import { Spinner } from 'components/UI/spinner/Spinner';

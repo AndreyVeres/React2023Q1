@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import FormCard, { IUserInfo } from './FormCard';
+import FormCard from './FormCard';
 
 import './form.scss';
 import { dateNotFuture } from 'utils/dateValidate';

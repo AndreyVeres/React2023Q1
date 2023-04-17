@@ -21,7 +21,7 @@ export function CardDetails({
       <div key={id + originalText} className={styles.cardDetails}>
         <img className={styles.img} src={imageUrl} alt="image" />
         <div className={styles.cardInfo}>
-          <h2 data-testd="name" className={styles.border}>
+          <h2 data-testid="name" className={styles.border}>
             {name}
           </h2>
           <div className={styles.border}>{getManaIcons(manaCost || '')}</div>
